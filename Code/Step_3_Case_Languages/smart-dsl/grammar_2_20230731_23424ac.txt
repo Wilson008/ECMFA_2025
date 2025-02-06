@@ -1,0 +1,56 @@
+grammar lsi.us.es.mis.xtext.Contract with org.eclipse.xtext.common.Terminals
+
+generate contract "http://www.us.lsi/es/mis/xtext/Contract"
+
+Contract:
+	'Contract' name=ID
+	'{'
+		'version:' version = STRING
+		(hasReceive?='hasReceive')?
+		(ownership?='ownership')?
+		(attributes+=Attribute | events+=Event | methods+=Method | validators+=Validator | dataStores+=DataStore)*
+	'}'
+;
+
+Attribute: 
+	(modifiable?='modifiable')? name=ID type=DataType 
+;
+
+Validator:
+	'validator' name=ID '(' (params+=Param (',' params+=Param)*)? ')' 
+	'{'
+		'message:' message = STRING
+		'validation:' validation = STRING
+	'}'
+;
+
+Method: 
+	'method' name=ID '(' (params+=Param (',' params+=Param)*)? ')' ('stateMutability:' statemutability=STRING)? '->' (outputs+=Output (',' outputs+=Output)*)?
+	 '{'
+	 	('description:' description = STRING)?
+	 	(modifiersKeyword='validators:' validators+=[Validator] (',' validators+=[Validator])*)?
+	 	(eventsKeyword='events:' events+=[Event] (',' events+=[Event])*)?
+	 '}'
+;
+
+Event:
+	'event' name=ID '(' (params+=Param (',' params+=Param)*)? ')'
+	 '{'
+	 	'description:' description=STRING
+	 '}'
+;
+
+Param:
+    name=ID type=DataType
+;
+
+Output:
+    name=ID type=DataType
+;
+
+enum DataType:
+	INTEGER = 'integer' | STRING='string' | BOOLEAN='boolean' | ADDRESS = 'address' | array = 'array';
+	
+DataStore:
+	'dataStore' name=ID 'fromType'  fromType=DataType 'toType' toType=DataType
+;

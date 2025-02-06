@@ -1,0 +1,50 @@
+To create an updated instance that adheres to Grammar 2, we must account for the differences between Grammar 1 and 2 and then apply necessary modifications to Instance 1. Here is a summary of key differences and their implications:
+
+1. **PackageDeclaration**: Grammar 2 introduces a concept of packages, allowing elements to be organized within them. However, since this is not mandatory, we won't use it in Instance 2.
+   
+2. **Import**: Grammar 2 introduces an `Import` rule, but since this is optional, it will not be included in Instance 2.
+
+3. **QualifiedName** for `Entity`: The `superType` in entities can use a qualified name for extended entities. We will consider this when modifying instance references but it's more structural for grammar.
+
+4. **DataType**: The declaration for `DataType` now ends with a semicolon (`;`).
+
+5. **Features**: Multiple features can optionally be separated by commas in the `Entity`.
+
+6. **Feature default value**: Features can have an optional default value, but since this is optional, it will not be instantiated.
+
+Applying these changes to Instance 1, we derive Instance 2:
+
+```plaintext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String,
+	
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }
+ 
+entity Post extends HasAuthor {
+    title: String,
+    content: String
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+### Notable Adjustments:
+
+- **Semicolon for DataTypes**: Added `;` after `datatype String`.
+- **Comma-Separated Features**: Introduced commas between features within entities as allowed in Grammar 2. However, for cases with comments, I preserved comment placement, being consistent with the instance's format.
+  
+This modified instance should align with the rules specified in Grammar 2, while honoring the constraints you've identified.

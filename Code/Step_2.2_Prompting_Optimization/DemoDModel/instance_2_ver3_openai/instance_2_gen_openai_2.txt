@@ -1,0 +1,43 @@
+To create an updated instance (Instance 2) that adheres to Grammar 2, we need to analyze the changes between Grammar 1 and Grammar 2. Here are the key differences:
+
+1. **Package and Import Support**: Grammar 2 introduces package declarations and imports. However, since these are optional and not present in the original instance, we won’t add them.
+  
+2. **Qualified Names**: The `Entity` rule now uses qualified names for `superType`. The `Feature` rule also uses qualified names for the `type`. This change affects reference syntax but doesn't require any changes because existing references are already simple names (not affected by qualified names).
+
+3. **DataType Terminator**: In Grammar 2, the `DataType` rule ends with a semicolon (`;`). Thus, we'll add a semicolon after `datatype String`.
+
+4. **Feature List in Entities**: Grammar 2 allows features in entities to be separated by commas. The original format is still allowed, so no change is needed here.
+
+5. **Default Values for Features**: Grammar 2 allows default values for features, which is optional, so we do not need to add any defaults.
+
+Based on the analysis, the main change we need is to add the semicolon after the `DataType`. Here's the modified instance:
+
+```plaintext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String
+	
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }
+ 
+entity Post extends HasAuthor {
+    title: String
+    content: String
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+This modified instance now adheres to Grammar 2 while keeping all formatting and content the same as the original where no changes were necessary.

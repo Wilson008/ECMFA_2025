@@ -1,0 +1,49 @@
+To convert Instance 1 to follow Grammar 2, let's first analyze the key differences between Grammar 1 and Grammar 2:
+
+1. **PackageDeclaration**: Grammar 2 introduces a `PackageDeclaration` rule, which is optional. According to the instructions, we won't instantiate this in Instance 2.
+
+2. **Import Declaration**: Grammar 2 allows the specification of imports, but again, since it's optional, we won't add it to Instance 2.
+
+3. **QualifiedName**: The `QualifiedName` rule is introduced in Grammar 2 for hierarchical naming. However, it's optional for Type extensions, and we'll keep using simple names unless fully qualified names are needed, which they aren't in this instance.
+
+4. **DataType End Statement**: In Grammar 2, the `DataType` declaration ends with a semicolon (`;`). We'll add this semicolon in Instance 2 for each `DataType`.
+
+5. **Changes in Entity Definition**: The rule for listing `features` in entities changed. Now features can be separated by commas (**`,`**), but it's still optional whether we use a comma or not between features. Since the original instance uses new lines, we will maintain this format and abstain from using commas.
+
+6. **Qualified Types in Feature**: In Grammar 2, the `type` in `Feature` may now include a `QualifiedName`. The current instance does not require use of fully qualified names, so no change is necessary here.
+
+7. **Defaults in Feature**: Features can have a default value, but this is optional and will not be instantiated in Instance 2.
+
+Bearing these differences in mind, here's how Instance 1 should be modified to conform to Grammar 2:
+
+```
+// Original Instance 1 with modifications to conform to Grammar 2
+
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;  // Added semicolon
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String
+	
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }
+ 
+entity Post extends HasAuthor {
+    title: String
+    content: String
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+These changes ensure that Instance 2 follows the structure and requirements of Grammar 2 while adhering to the guidelines provided.

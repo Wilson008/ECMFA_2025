@@ -1,0 +1,62 @@
+To create an instance of Grammar 2 from Instance 1, we first need to identify the differences between Grammar 1 and Grammar 2 and then adapt Instance 1 to conform to the new grammatical rules.
+
+### Differences between Grammar 1 and Grammar 2:
+
+1. **Namespace and Grammar Changes:**
+   - The grammar's namespace declaration was updated from `org.example.domainmodel.Domainmodel` to `org.example.dmodel.evolved.DModelE`.
+
+2. **Domainmodel Structure:**
+   - `Domainmodel` now includes `PackageDeclaration` and `Import` in addition to `Type`, encapsulated under `AbstractElement`.
+
+3. **Package Declaration:**
+   - New `PackageDeclaration` rule was introduced with `QualifiedName`.
+
+4. **Imports:**
+   - New `Import` rule for imported namespaces using `QualifiedNameWithWildcard`.
+
+5. **QualifiedName:**
+   - Introduced `QualifiedName` to allow for qualified names with dots, and `QualifiedNameWithWildcard` for imports.
+
+6. **DataType and Entity Syntax:**
+   - `DataType` declaration ends with a semicolon `;`.
+   - In `Entity`, features are separated by commas. 
+
+7. **Feature Default Values and Qualified Types:**
+   - `Feature` can specify default values with the syntax `('(' default=ID ')')?`, and the `type` has been extended to include `QualifiedName`.
+
+Given these differences and the constraints you provided, here is a modified version of Instance 1, now Instance 2, according to Grammar 2:
+
+```xtext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+    title: String ,
+    many posts: Post
+}
+
+entity HasAuthor { 
+    author: String 
+}
+
+entity Post extends HasAuthor {
+    title: String ,
+    content: String ,
+    //many comment: Comment
+    many comments: Comment
+}
+
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+### Key Adjustments:
+
+- **DataType:** Added a semicolon `;` at the end of `datatype String;`.
+- **Entity Features:** Added commas between features in the entities to satisfy the new entity structure with comma-separated features in Grammar 2.
+- **Format:** All formatting comments and structures are preserved as per the directives. No optional or "OR" related constructs that were introduced in Grammar 2 have been instantiated, according to the instructions.

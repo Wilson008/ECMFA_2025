@@ -1,0 +1,49 @@
+To transform Instance 1, which follows Grammar 1, into Instance 2 that abides by Grammar 2, we need to consider the differences between the two grammar versions.
+
+### Key Differences
+
+1. **PackageDeclaration and Import**: Grammar 2 introduces the concepts of `PackageDeclaration` and `Import`. These are new optional elements in the grammar, so according to the provided rules, we don't need to instantiate them in the modified instance.
+
+2. **QualifiedName**: Grammar 2 introduces `QualifiedName` to allow names to have dot-separated components. In Instance 1, names are simple identifiers without dots, so no changes are necessary.
+
+3. **QualifiedNameWithWildcard**: Used in imports, which are not explicitly needed in our instance transformation.
+
+4. **DataType syntax:** In Grammar 2, the `DataType` now requires a semicolon (`;`) at the end of the declaration.
+
+5. **Entity declaration:** In Grammar 1, features in entities are separated by white spaces. In Grammar 2, features are separated by commas, which modifies the syntax within the curly braces of `Entity`.
+
+6. **Features' default value:** Grammar 2 allows a default value for a feature using syntax like `name: Type (default)`, which is optional, so we don't need to add it.
+
+### Transforming Instance 1 to Instance 2
+
+```plaintext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;  // Added semicolon
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String,   // Added a comma
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }  // No changes needed
+ 
+entity Post extends HasAuthor {
+    title: String,  // Added a comma
+    content: String,
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+### Summary of Changes
+
+1. **Semicolon added after `datatype` declaration.**
+2. **Features inside `entity` declarations now use commas as separators.**

@@ -1,0 +1,48 @@
+=== Step 3: Instance Transformation ===
+I'll analyze the differences and modify instance_1 to create instance_2 following your rules.
+
+Main differences requiring changes in the instance:
+1. DataType now requires a semicolon (';')
+2. Features in Entity are now separated by commas
+3. Other changes (packages, imports, etc.) are optional, so we won't add them
+
+Here's instance_2:
+
+```
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String,
+	
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }
+ 
+entity Post extends HasAuthor {
+    title: String,
+    content: String,
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+Changes made:
+1. Added semicolon after 'datatype String'
+2. Added commas between features in entities where multiple features exist:
+   - In Blog: between 'title' and 'posts'
+   - In Post: between 'title', 'content' and 'comments'
+   - No comma needed in HasAuthor and Comment as they only have one feature
+
+All formatting, comments, and whitespace remain exactly the same as in instance_1.
+
+Note: Optional elements from grammar_2 (packages, imports, qualified names, default values) were not added as per your first rule.

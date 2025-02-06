@@ -1,0 +1,106 @@
+grammar de.tobias_blaufuss.persistence.Persistence with org.eclipse.xtext.common.Terminals
+
+generate persistence "http://www.tobias_blaufuss.de/persistence/Persistence"
+
+Model:
+	PersistenceModel
+;
+
+PersistenceModel:
+	'Configuration' '['
+		configs+=Configuration+
+	']'
+	(entities+=Entity)+
+;
+Entity:
+	'entity' name=ID '{'
+		fieldDeclarations+=FieldDeclaration+
+	'}'
+;
+
+FieldDeclaration:
+	field=Field ('[' options+=TypeOption (',' options+=TypeOption)? ']')?
+;
+
+Field:
+	PropertyField | EntityField | BackrefField
+;
+
+PropertyField:
+	'property' name=ID ':' type=Type
+;
+
+EntityField:
+	'object' '[' cardinality=Cardinality '|' (bidirectional ?= '<->'| unidirectional ?= '->') ']' name=ID ':' entityReference=[Entity]
+;
+
+BackrefField:
+	'backref' '[' backref=[EntityField|FQN] ']' name=ID
+;
+
+FQN:
+	ID ('.' ID)*
+;
+
+Type:
+	StringType | IntegerType
+;
+
+StringType:
+	{StringType}
+	'String' ('(' count=INT ')')?
+;
+
+IntegerType:
+	{IntegerType} 
+	'Integer'
+;
+
+TypeOption:
+	UniqueOption | NotNullOption
+;
+
+UniqueOption:
+	unique ?= 'unique'
+;
+
+NotNullOption:
+	notNull ?= 'not_null'
+;
+
+enum Cardinality:
+	ONE_TO_MANY="1..n" | MANY_TO_MANY="n..m" | MANY_TO_ONE="n..1" | ONE_TO_ONE="1..1"
+;
+
+Configuration:
+	JavaConfiuration | PythonConfiguration
+;
+
+JavaConfiuration:
+	'Java' '['
+		'genpath' path=Path
+		'package' pkg=FQN
+		'ORM' orm=JavaORM
+		
+	']'
+;
+
+enum JavaORM:
+	HIBERNATE='Hibernate'
+;
+
+PythonConfiguration:
+	'Python' '['
+		'genpath' path=Path
+		'module_name' fileName=FQN
+		'ORM' orm=PythonORM
+	']'
+;
+
+enum PythonORM:
+	SQLALCHEMY='SQLAlchemy'
+;
+
+Path:
+	ID ('/' ID)*
+;

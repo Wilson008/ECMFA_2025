@@ -1,0 +1,158 @@
+grammar org.xtext.example.mydsl.MyDsl
+    with org.eclipse.xtext.common.Terminals
+
+generate myDsl "http://www.xtext.org/example/mydsl/MyDsl"
+
+import "http://www.eclipse.org/emf/2002/Ecore"
+
+Model:
+	network=Network;
+
+Network:
+	'network' name=STRING '{' &
+	'epochs' ASSIGN epochs=INTEGER &
+	'image-size' ASSIGN imgSize=INTEGER &
+	'image-channels' ASSIGN imgChannels=INTEGER &
+	'batch-size' ASSIGN batchSize=INTEGER &
+	'output-labels' ASSIGN outputLabels=INTEGER &
+	('train-data-path' ASSIGN trainPath=STRING)? &
+	('val-data-path' ASSIGN valPath=STRING)? &
+	'caffe-path' ASSIGN caffePath=STRING &
+	'output-path' ASSIGN outputPath=STRING &
+	('seed' ASSIGN seed=ZINTEGER)? &
+	'updater' REFERENCE updaterType=UpdaterType &
+	'learningRate' ASSIGN learningRate=REAL &
+	layers+=Layer*
+	'}'
+;
+
+Layer:
+	type='conv' layerDecl=LayerDeclaration '{' convLayerBody=ConvLayerBody layerBody=LayerBody '}'
+	| type='pool' layerDecl=LayerTuple '{' poolLayerBody=PoolLayerBody '}'
+	| type='dense' layerDecl=LayerDeclaration ('{' layerBody=LayerBody '}')?
+	| type='norm' layerDecl=LayerTuple '{' batchNormBody=BachNormBody '}'
+    | type='scale' layerDecl=LayerTuple '{' scaleNormBody=ScaleNormBody '}'
+	| type='branch' layerDecl=LayerTuple '{' branchBody=BranchBody branchLayers+=(Layer)* '}'
+;
+
+ScaleNormBody:
+    'use-bias-term' ASSIGN useBiasTerm=Decission
+;
+
+BachNormBody:
+    'use-global-stats' ASSIGN useGlobalStats=Decission
+;
+
+BranchBody:
+    'type' REFERENCE type=BranchType &
+    'operation' REFERENCE operation=OperationType
+;
+
+LayerBody:
+	(layerParams+='activation' REFERENCE activType=ActivationFunctionType)? &
+	(layerParams+='weightsInit' REFERENCE weightInit=WeightInitType)? &
+	(layerParams+='biasInit' REFERENCE biasInit=WeightInitType)? &
+	(layerParams+='dropout' ASSIGN dropout=REAL)? &
+	(SEPARATOR)*
+;
+
+ConvLayerBody:
+	'kernel-size' ASSIGN kernelSize=INTEGER &
+	('stride' ASSIGN stride=INTEGER)? &
+	(SEPARATOR)*
+;
+
+PoolLayerBody:
+	'type' REFERENCE poolingType=PoolingType &
+	('stride' ASSIGN stride=INTEGER)? &
+	(SEPARATOR)*
+;
+
+LayerDeclaration:
+	layerTuple+=LayerTuple
+	| '[' layerTuple+=LayerTuple (SEPARATOR layerTuple+=LayerTuple)* ']'
+;
+
+LayerTuple:
+	'(' layerName=LayerName (in=InParam)? (out=OutParam)? ')'
+;
+
+LayerName:
+	'name' ':' name=(STRING | 'final-layer')
+;
+
+InParam:
+	'in' ':' name=(STRING | 'data')
+;
+
+OutParam:
+	'out' ':' (value=INTEGER | strValue='labels' | strValue='pass')
+;
+
+enum Decission:
+    TRUE='true' | FALSE='false'
+;
+
+enum BranchType:
+    RESIDUAL='residual'
+;
+
+enum OperationType:
+    PROD='PROD' | SUM='SUM'
+;
+
+enum PoolingType:
+	MAX_POOLING='MAX' | AVERAGE_POOLING='AVG'
+;
+
+enum ActivationFunctionType:
+	RELU='ReLU' | SIGMOID='Sigmoid' | TANH='TanH'
+;
+
+enum UpdaterType:
+	SGD='sgd' | ADAM='adam' | ADADELTA='adadelta' | NESTEROVS='nestrovs' | ADAGRAD='adagrad' | RMSPROP='rmsprop'
+;
+
+enum WeightInitType:
+	XAVIER='xavier' | CONSTANT='constant' | GAUSSIAN='gaussian'
+;
+
+terminal EXT_INT returns EInt:
+    INTEGER ('e' | 'E')('-' | '+') INTEGER
+;
+
+terminal INTEGER returns EInt:
+    ('1'..'9')(INT)*
+;
+
+terminal ZINTEGER returns EInt:
+	INT
+;
+
+terminal REAL returns EFloat:
+	INTEGER | INT '.' (EXT_INT | INT) (INT)*
+;
+
+terminal ASSIGN:
+	'='
+;
+
+terminal SEPARATOR:
+	','
+;
+
+terminal REFERENCE:
+	'->'
+;
+
+terminal WS:
+    (' '|'\t'|'\r'|'\n')+
+;
+
+terminal SL_COMMENT:
+    '//' !('\n'|'\r')*
+;
+
+terminal ML_COMMENT:
+	'/*' -> '*/'
+;

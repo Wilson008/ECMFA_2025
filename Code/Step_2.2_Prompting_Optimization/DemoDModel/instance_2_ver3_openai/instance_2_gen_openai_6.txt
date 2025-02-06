@@ -1,0 +1,51 @@
+To create an updated instance of the DSL that conforms to Grammar 2 based on Instance 1, we first need to analyze the differences between the two grammars:
+
+1. **Package and Import Declarations:**
+   - Grammar 2 introduces the `PackageDeclaration` and `Import` rules. However, these are optional and we're instructed not to instantiate new optional or "or" elements.
+
+2. **Qualified Names:**
+   - The entity `extends` clause and feature `type` now use `QualifiedName`. This implies that fully qualified names can be used, but using just `ID` remains valid.
+
+3. **DataType Changes:**
+   - In Grammar 2, the `DataType` definition ends with a semicolon `;`.
+
+4. **Features in Entities:**
+   - In Grammar 2, entity features can be separated by commas. However, using new optional syntax is not required.
+
+5. **Default Values for Features:**
+   - `Feature` now optionally allows a default value (`default=ID`), but using this is optional.
+
+Now, we will modify Instance 1 to conform to Grammar 2 while adhering to the guidelines:
+
+```plaintext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+	title: String
+	
+	many posts: Post
+}
+ 
+entity HasAuthor { author: String }
+ 
+entity Post extends HasAuthor {
+    title: String
+    content: String
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+### Key Changes:
+- Added a semicolon `;` at the end of `datatype String;`. 
+
+These changes ensure that the instance now complies with Grammar 2 while keeping all optional new features from Grammar 2 uninstantiated as instructed.

@@ -1,0 +1,60 @@
+Let's first analyze the differences between Grammar 1 and Grammar 2:
+
+1. **Domainmodel changes:**
+   - Grammar 1 had `Domainmodel` containing just `Type` elements.
+   - Grammar 2 adds `AbstractElement` which can be `PackageDeclaration`, `Type`, or `Import`.
+
+2. **PackageDeclaration:**
+   - Grammar 2 introduces `PackageDeclaration` with a `QualifiedName`. This change doesn't affect Instance 1 unless we add packages, which we won't since it's optional.
+
+3. **QualifiedName:**
+   - Grammar 2 introduces `QualifiedName` and `QualifiedNameWithWildcard`, enhancing the ability to use namespaces.
+
+4. **Import:**
+   - Introduced in Grammar 2, allows importing namespaces with `QualifiedNameWithWildcard`, but we won't use imports in this context as per your guidelines.
+
+5. **DataType:**
+   - In Grammar 2, `DataType` declarations end with a semicolon (`;`).
+
+6. **Entity:**
+   - The `extends` clause in Grammar 2 uses `QualifiedName`.
+   - Features within an entity can be listed with commas in between them, although creating a single feature without commas is still valid.
+
+7. **Feature:**
+   - A default value can now be provided using parentheses `(default=ID)`.
+
+With these differences identified, let's modify Instance 1 to follow Grammar 2, keeping the guidelines in mind:
+
+```plaintext
+/**
+ * This is the example before the evolution.
+ * This is the header.
+ * */
+datatype String;
+
+/* this is the first comment, added by me */
+entity Blog {
+    title: String
+    
+    many posts: Post
+}
+ 
+entity HasAuthor { 
+    author: String 
+}
+ 
+entity Post extends HasAuthor {
+    title: String,
+    content: String,
+    //many comment: Comment
+    many comments: Comment
+}
+ 
+entity Comment extends HasAuthor {
+    content: String // this is the second comment, added 2025-01-01
+}
+```
+
+**Key changes made:**
+- Added `;` to the line `datatype String`.
+- Added `,` between features of `Post`.
